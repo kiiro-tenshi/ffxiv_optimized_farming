@@ -12,7 +12,7 @@
 
   <ol>
     <li>Clone the repository to your local machine:</li>
-    <code>git clone https://github.com/kiiro-tenshi/ffxiv_farming_optimization</code>
+    <code>git clone https://github.com/kiiro-tenshi/ffxiv_optimized_farming</code>
     <li>Install the required Python packages:</li>
     <code>pip install -r requirements.txt</code>
   </ol>
