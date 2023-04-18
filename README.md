@@ -7,7 +7,7 @@
 <body>
   <h1>Optimized FFXIV Farming</h1>
 
-  <p>This repository contains a collection of scripts and tools that help you optimize your farming routines in various video games and other applications. The scripts use various algorithms and techniques, such as linear programming, genetic algorithms, and machine learning, to determine the optimal strategies for maximizing your gains while minimizing your costs and time investments. The scripts required Python version at least 3.9 to run correctly</p>
+  <p>This repository contains a collection of scripts and tools that help you optimize your farming routines in various video games and other applications. The scripts use various algorithms and techniques, such as linear programming, genetic algorithms, and machine learning, to determine the optimal strategies for maximizing your gains while minimizing your costs and time investments. The scripts required Python version at least 3.9 to run correctly.</p>
 
   <h2>Optimized Moggle Tome Farm</h2>
 
