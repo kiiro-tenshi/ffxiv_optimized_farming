@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Apr 17 23:46:25 2023
-by: Kiiro Tenshi
+@author: Kiiro Tenshi
 """
 
 import pandas as pd
