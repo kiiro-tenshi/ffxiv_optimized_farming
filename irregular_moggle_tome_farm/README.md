@@ -6,7 +6,7 @@
 <body>
   <h1>Optimized Moggle Tome Farm</h1>
 
-  <p>This project is a Python script that helps you optimize your daily farming routine in the Moggle Mog XII Extreme dungeon in Final Fantasy XIV. The script uses linear programming to determine the optimal number of times to run each dungeon in order to maximize the number of Irregular Tomestones of Mendacity obtained while staying within a given play time capacity.</p>
+  <p>This project is a Python script that helps you optimize your daily farming routine in the moggle tomes in Final Fantasy XIV. The script uses linear programming to determine the optimal number of times to run each dungeon in order to maximize the number of Irregular Tomestones of Mendacity obtained while staying within a given play time capacity.</p>
 
   <h2>Installation</h2>
 
