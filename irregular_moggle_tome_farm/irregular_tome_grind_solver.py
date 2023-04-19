@@ -11,9 +11,9 @@ def moggle_tome_farm(sheet_id, sheet_name, capacity):
     url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
     dungeons = pd.read_csv(url)
     # Extract data from DataFrame
-    dungeon_names = dungeons['Dungeon Name'].tolist()
-    dungeon_times = dungeons['Estimated Completion Time'].tolist()
-    tome_rewards = dungeons['Number of Irregular Tomestones of Mendacity'].tolist()
+    dungeon_names = dungeons['dungeon_name'].tolist()
+    dungeon_times = dungeons['estimated_completion_time'].tolist()
+    tome_rewards = dungeons['no_irregular_tomestones_of_mendacity'].tolist()
     
     # Create a linear solver object
     solver = pywraplp.Solver.CreateSolver('SCIP')
