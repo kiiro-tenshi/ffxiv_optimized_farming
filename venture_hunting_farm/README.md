@@ -31,7 +31,7 @@
     <li>Open the <code>retainer_hunting_venture_solver.py</code> file and replace the <code>sheet_id</code>, <code>sheet_name</code>, <code>world</code>, and <code>process_no</code> variables with your own values. Also, provide the appropriate information about your retainers in the <code>retainers</code> dictionary.</li>
     <li>Run the script:</li>
     <code>python retainer_hunting_venture_solver.py</code>
-    <p>The script will print the assigned ventures for each retainer and the maximum profit.</p>
+    <p>The script then will obtain the latest average sale price for each venture item from Universalis then print the assigned ventures for each retainer and the maximum profit.</p>
   </ol>
 
   <h2>Testing</h2>
