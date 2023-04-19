@@ -120,8 +120,8 @@ if __name__ == '__main__':
     venture_hunt_df = get_latest_sale_price(sheet_id, sheet_name, world, process_no)
     
     retainers = {
-        'A': {'item_level': 60, 'level': 100},
-        'B': {'item_level': 60, 'level': 100}
+        'A': {'item_level': 130, 'level': 60},
+        'B': {'item_level': 130, 'level': 60}
         }
     
     assigned_ventures = hunting_venture_solver(retainers, venture_hunt_df)
