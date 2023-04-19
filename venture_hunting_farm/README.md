@@ -22,10 +22,10 @@
   <ol>
     <li>Make sure you have a Google Sheets document with the venture data in the following format:</li>
     <pre>
-      | level | venture      | quantity | item_level | duration | cost | experience | item_id | average_latest_sale_price |
-      |-------|--------------|----------|------------|----------|------|------------|---------|---------------------------|
-      | 1     | Copper Ore   | 5        | 1          | 40       | 5    | 100        | 12345   | 100                       |
-      | ...   | ...          | ...      | ...        | ...      | ...  | ...        | ...     | ...                       |
+      | level | venture      | quantity | item_level | duration | cost | experience | item_id |
+      |-------|--------------|----------|------------|----------|------|------------|---------|
+      | 1     | Copper Ore   | 5        | 1          | 40       | 5    | 100        | 12345   |
+      | ...   | ...          | ...      | ...        | ...      | ...  | ...        | ...     |
     </pre>
     <li>Find the ID of your Google Sheets document by looking at the URL. It should be a long string of letters and numbers between <code>/d/</code> and <code>/edit#gid=</code>.</li>
     <li>Open the <code>retainer_hunting_venture_solver.py</code> file and replace the <code>sheet_id</code>, <code>sheet_name</code>, <code>world</code>, and <code>process_no</code> variables with your own values. Also, provide the appropriate information about your retainers in the <code>retainers</code> dictionary.</li>
