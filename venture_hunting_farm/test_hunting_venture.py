@@ -2,7 +2,7 @@
 """
 Created on Wed Apr 19 23:58:01 2023
 
-@author:
+@author: Kiiro Tenshi
 """
 
 from retainer_hunting_venture_solver import get_latest_sale_price, hunting_venture_solver
