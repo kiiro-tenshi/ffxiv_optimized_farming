@@ -31,7 +31,7 @@ def get_item_id(sheet_id, sheet_name):
     venture_hunt_df['item_id'] = item_ids
     return venture_hunt_df
 
-def fetch_item_price(item_id, world):
+def fetch_item_price(item_id, world, price_window):
     response = requests.get(f'https://universalis.app/api/v2/history/{world}/{item_id}').text
     json_response = json.loads(response)
     if 'lastUploadTime' not in json_response:
@@ -47,15 +47,15 @@ def fetch_item_price(item_id, world):
             median_price = median(prices)
             mad_price = median([abs(price - median_price) for price in prices])
             filtered_prices = [price for price in prices if abs(price - median_price) <= 3*mad_price]
-            latest_prices = filtered_prices[:5]
+            latest_prices = filtered_prices[:price_window]
             average_price = mean(latest_prices)
             return item_id, int(average_price)
 
-def get_latest_sale_price(sheet_id, sheet_name, world, process_no):
+def get_latest_sale_price(sheet_id, sheet_name, world, process_no, price_window=10):
     url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
     venture_hunt_df = pd.read_csv(url)
     with ThreadPoolExecutor(max_workers=process_no) as executor:
-        futures = [executor.submit(fetch_item_price, item_id, world) for item_id in venture_hunt_df['item_id']]
+        futures = [executor.submit(fetch_item_price, item_id, world, price_window) for item_id in venture_hunt_df['item_id']]
         sale_prices = {}
         for future in as_completed(futures):
             item_id, price = future.result()
@@ -103,7 +103,8 @@ def hunting_venture_solver(retainers, venture_hunt_df):
         for retainer in retainers.keys():
             for index, venture in venture_hunt_df.iterrows():
                 if x[index, retainer].solution_value() == 1:
-                    assigned_ventures[retainer] = venture['venture']
+                    assigned_ventures[retainer] = {'venture': venture['venture'], 'level': venture['level'], 
+                                                   'price': venture['average_latest_sale_price']}
     
         print("Assigned ventures:", assigned_ventures)
     
@@ -116,7 +117,6 @@ if __name__ == '__main__':
     sheet_name = 'data'
     world = 'jenova'
     process_no = 50
-    
     venture_hunt_df = get_latest_sale_price(sheet_id, sheet_name, world, process_no)
     
     retainers = {
