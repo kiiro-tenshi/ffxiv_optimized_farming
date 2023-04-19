@@ -15,7 +15,7 @@
 
   <p>To use this application, follow the instructions in the <code>irregular_moggle_tome_farm</code> directory. Make sure you have a Google Sheets document with the dungeon data in the required format, and replace the <code>sheet_id</code>, <code>sheet_name</code>, and <code>capacity</code> variables with your own values. Then run the script using the command <code>python moggle_tome_farm.py</code>.</p>
   
-  <h2>Optimized Retainer Venture Farm</h2>
+  <h2>Optimized Retainer Venture Hunting Farm</h2>
 
   <p>Optimized Retainer Venture Farm is a Python script that maximizes your profit from retainer ventures in Final Fantasy XIV by assigning the best venture tasks to your retainers based on their levels and item levels. The script uses linear programming with the OR-Tools library to optimize the selection of ventures, considering the latest average sale prices of items and the quantity of items obtained from each venture.</p>
 
