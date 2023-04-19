@@ -40,7 +40,7 @@
 
   <code>pytest</code>
 
-  <p>This will run all the test functions in the <code>test_optimized_retainer_venture_farm.py</code> file and report any failures or errors that occurred during the test run.</p>
+  <p>This will run all the test functions in the <code>test_hunting_venture.py</code> file and report any failures or errors that occurred during the test run.</p>
 
   <h2>License</h2>
 
