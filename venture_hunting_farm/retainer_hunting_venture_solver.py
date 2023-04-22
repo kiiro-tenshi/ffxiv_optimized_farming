@@ -98,14 +98,14 @@ def hunting_venture_solver(retainers, venture_hunt_df):
     # Check the result
     if status == pywraplp.Solver.OPTIMAL:
         print(f"Objective value (max profit): {solver.Objective().Value()} gil")
-    
+        assigned_ventures['expected_profit'] = solver.Objective().Value()
         # Retrieve the assigned ventures for each retainer
         for retainer in retainers.keys():
             for index, venture in venture_hunt_df.iterrows():
                 if x[index, retainer].solution_value() == 1:
                     assigned_ventures[retainer] = {'venture': venture['venture'], 'level': venture['level'], 
                                                    'price': venture['average_latest_sale_price']}
-    
+                
         print("Assigned ventures:", assigned_ventures)
     
     else:
