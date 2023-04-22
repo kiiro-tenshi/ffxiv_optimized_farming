@@ -5,6 +5,7 @@ Created on Mon Apr 17 23:46:25 2023
 """
 
 import pandas as pd
+import sys
 from ortools.linear_solver import pywraplp
 
 def moggle_tome_farm(sheet_id, sheet_name, capacity):
@@ -50,11 +51,28 @@ def moggle_tome_farm(sheet_id, sheet_name, capacity):
         
     return dungeons, results
 
-if __name__ == '__main__':
+def main():
+    args = sys.argv[1:]
+    # Input validation and assignment of capacity
+    if (len(args) > 1):
+        print("Too many arguments")
+        exit(-1)
+    elif (len(args) == 0):
+        capacity = 240 #default value; original functionality.
+    elif (not args[0].isdigit()):
+        print("Type error for argument.")
+        exit(-1)
+    else:
+        capacity = int(args[0]) 
+
     # Define input data as a pandas DataFrame
     sheet_id = '10wZiv70IZLeQlOaT2XX6e5vrWXERKudjX5Vjq65RaHc'
     sheet_name = 'data'
-    capacity = 240  # capacity of play time per day
-    dungeons, results = moggle_tome_farm(sheet_id, sheet_name, capacity)
+
+    _, results = moggle_tome_farm(sheet_id, sheet_name, capacity)
+    return results
+
+if __name__ == '__main__':
+    main()
         
     
