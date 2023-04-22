@@ -31,35 +31,43 @@ def get_item_id(sheet_id, sheet_name):
     venture_hunt_df['item_id'] = item_ids
     return venture_hunt_df
 
-def fetch_item_price(item_id, world, time_window_day):
+def fetch_item_price(item_id, world, time_window_minutes):
     response = requests.get(f'https://universalis.app/api/v2/history/{world}/{item_id}').text
     json_response = json.loads(response)
     if 'lastUploadTime' not in json_response:
-        return item_id, 0
+        return 0, item_id, 0
     else:
         last_upload_time = datetime.fromtimestamp(json_response['lastUploadTime']/1000, timezone.utc)
-        time_window = datetime.now(timezone.utc) - timedelta(days=time_window_day)
+        time_window = datetime.now(timezone.utc) - timedelta(minutes=time_window_minutes)
         if last_upload_time < time_window:
-            return item_id, 0
+            return 0, item_id, 0
         else:
             entries = sorted(json_response['entries'], key=lambda x: x['timestamp'], reverse=True)
+            num_transaction = len(entries)
             prices = [entry['pricePerUnit'] for entry in entries]
             median_price = median(prices)
             mad_price = median([abs(price - median_price) for price in prices])
             filtered_prices = [price for price in prices if abs(price - median_price) <= 3*mad_price]
             average_price = mean(filtered_prices)
-            return item_id, int(average_price)
+            return num_transaction, item_id, int(average_price)
 
 def get_latest_sale_price(sheet_id, sheet_name, world, process_no, time_window_day=2):
+    time_window_minutes = time_window_day * 1440 #convert to minutes
     url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
     venture_hunt_df = pd.read_csv(url)
     with ThreadPoolExecutor(max_workers=process_no) as executor:
-        futures = [executor.submit(fetch_item_price, item_id, world, time_window_day) for item_id in venture_hunt_df['item_id']]
+        futures = [executor.submit(fetch_item_price, item_id, world, time_window_minutes) for item_id in venture_hunt_df['item_id']]
         sale_prices = {}
+        num_transactions = {}
         for future in as_completed(futures):
-            item_id, price = future.result()
+            num_transaction, item_id, price = future.result()
             sale_prices[item_id] = price
+            num_transactions[item_id] = num_transaction
+    max_transactions = max(num_transactions.values())
     venture_hunt_df['average_latest_sale_price'] = [sale_prices[item_id] for item_id in venture_hunt_df['item_id']]
+    venture_hunt_df['num_transactions'] = [num_transactions[item_id] for item_id in venture_hunt_df['item_id']]
+    venture_hunt_df['sale_score'] = [num_transactions[item_id] / max_transactions for item_id in venture_hunt_df['item_id']]
+
     return venture_hunt_df
 
 def hunting_venture_solver(retainers, venture_hunt_df):
@@ -72,11 +80,12 @@ def hunting_venture_solver(retainers, venture_hunt_df):
         for retainer in retainers.keys():
             x[index, retainer] = solver.BoolVar(f'x_{index}_{retainer}')
     
-    # Objective function: maximize profit
+    # Objective function: maximize profit with consideration of probability being sold
     objective = solver.Objective()
     for index, venture in venture_hunt_df.iterrows():
         for retainer in retainers.keys():
-            objective.SetCoefficient(x[index, retainer], venture['average_latest_sale_price'] * venture['quantity'])
+            weighted_profit = venture['average_latest_sale_price'] * venture['quantity'] * venture['sale_score']
+            objective.SetCoefficient(x[index, retainer], weighted_profit)
     objective.SetMaximization()
     
     # Constraint 1: each retainer can do at most one venture
@@ -96,15 +105,16 @@ def hunting_venture_solver(retainers, venture_hunt_df):
     assigned_ventures = {}
     # Check the result
     if status == pywraplp.Solver.OPTIMAL:
-        print(f"Objective value (max profit): {solver.Objective().Value()} gil")
-        assigned_ventures['expected_profit'] = solver.Objective().Value()
+        print(f"Objective value: {solver.Objective().Value()}")
         # Retrieve the assigned ventures for each retainer
+        assigned_ventures['expected_profit'] = 0
         for retainer in retainers.keys():
             for index, venture in venture_hunt_df.iterrows():
                 if x[index, retainer].solution_value() == 1:
                     assigned_ventures[retainer] = {'venture': venture['venture'], 'level': venture['level'], 
-                                                   'price': venture['average_latest_sale_price']}
-                
+                                                   'price': venture['average_latest_sale_price'], 
+                                                   'sale_score': venture['sale_score']}
+                    assigned_ventures['expected_profit'] += venture['average_latest_sale_price'] * venture['quantity']
         print("Assigned ventures:", assigned_ventures)
     
     else:
