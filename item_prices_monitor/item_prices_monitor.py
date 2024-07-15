@@ -16,8 +16,10 @@ def get_item_id(item):
     response = requests.get(f'https://xivapi.com/search?string={item_}').text
     json_response = json.loads(response)
     for result in json_response['Results']:
-        item_id = result['ID']
-    return item_id
+        if result['Name'] == item:
+            return result['ID']
+        else:
+            return None
 
 def fetch_item_price(item_name, world):
     item_id = get_item_id(item_name)
@@ -72,6 +74,6 @@ def fetch_item_price(item_name, world):
     return data
 
 if __name__ == '__main__':
-    item_name = 'Modern Aesthetics - Gyr Abanian Plait'
+    item_name = "Gatherer's Grasp Materia XI"
     world = 'Jenova'
     data =  fetch_item_price(item_name, world)
